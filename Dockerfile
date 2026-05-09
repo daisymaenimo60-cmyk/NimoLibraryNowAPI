@@ -6,7 +6,7 @@ ENV APSNETCORE_URLS=http://+:8080
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY . .
-RUN dotnet restore
+RUN dotnet restore "NimoLibraryNowAPI.csproj"
 RUN dotnet publish -c Release -o /app/out
 
 FROM base AS final
