@@ -7,9 +7,15 @@ ENV ASPNETCORE_URLS=http://+:8080
 # Stage 2: Build
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
+
+# Copy the project file first to leverage Docker caching
+COPY ["NimoLibraryNowAPI/NimoLibraryNowAPI.csproj", "NimoLibraryNowAPI/"]
+RUN dotnet restore "NimoLibraryNowAPI/NimoLibraryNowAPI.csproj"
+
+# Copy the rest of the source code
 COPY . .
-RUN dotnet restore
-RUN dotnet publish -c Release -o /app/out
+WORKDIR "/src/NimoLibraryNowAPI"
+RUN dotnet publish "NimoLibraryNowAPI.csproj" -c Release -o /app/out
 
 # Stage 3: Final
 FROM base AS final
